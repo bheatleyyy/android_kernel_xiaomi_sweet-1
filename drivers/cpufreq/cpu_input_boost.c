@@ -84,7 +84,7 @@ static void update_online_cpu_policy(void)
 
 static void __cpu_input_boost_kick(struct boost_drv *b)
 {
-	if (test_bit(SCREEN_OFF, &b->state))
+	if (test_bit(SCREEN_OFF, &b->state) || (CONFIG_INPUT_BOOST_DURATION_MS == 0))
 		return;
 
 	set_bit(INPUT_BOOST, &b->state);
@@ -351,7 +351,7 @@ static int __init cpu_input_boost_init(void)
 		goto unregister_handler;
 	}
 
-	thread = kthread_run(cpu_boost_thread, b, "cpu_boostd");
+	thread = kthread_run_perf_critical(cpu_boost_thread, b, "cpu_boostd");
 	if (IS_ERR(thread)) {
 		ret = PTR_ERR(thread);
 		pr_err("Failed to start CPU boost thread, err: %d\n", ret);
