@@ -188,8 +188,15 @@ static int cpu_notifier_cb(struct notifier_block *nb, unsigned long action,
 		return NOTIFY_OK;
 
 	/* Unboost when the screen is off */
-	if (test_bit(SCREEN_OFF, &b->state)) {
-		policy->min = policy->cpuinfo.min_freq;
+	if (cpumask_test_cpu(policy->cpu, cpu_lp_mask) &&
+			test_bit(SCREEN_OFF, &b->state)) {
+		policy->min = CONFIG_IDLE_MIN_FREQ_LP;
+		return NOTIFY_OK;
+	}
+
+	else if (cpumask_test_cpu(policy->cpu, cpu_perf_mask) &&
+			test_bit(SCREEN_OFF, &b->state)) {
+		policy->min = CONFIG_IDLE_MIN_FREQ_PERF;
 		return NOTIFY_OK;
 	}
 
