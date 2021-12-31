@@ -515,7 +515,6 @@ static const struct adreno_gpu_core adreno_gpulist[] = {
 		.busy_mask = 0xFFFFFFFE,
 		.cx_ipeak_gpu_freq = 900000000,
 	},
-#endif
 	{
 		.gpurev = ADRENO_REV_A618,
 		.core = 6,
